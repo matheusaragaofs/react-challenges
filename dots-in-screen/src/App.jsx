@@ -1,55 +1,71 @@
 import './App.css'
-import React, { useEffect, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
 function App() {
-  const [positions, setPositions] = useState([])
-
+  const [dots, setDots] = useState([])
+  const [deletedDots, setDeletedDots] = useState([])
 
   const handleMouseClick = (event) => {
-    const position = { x: event.clientX, y: event.clientY, color: random_hex_color_code() }
-    setPositions([...positions, position])
+    const dot = { x: event.clientX, y: event.clientY }
+    setDots([...dots, dot])
   }
 
-  const random_hex_color_code = () => {
-    let n = (Math.random() * 0xfffff * 1000000).toString(16);
-    return '#' + n.slice(0, 6);
-  };
 
-  console.log(random_hex_color_code())
+  const mainComponent = useMemo(() => {
 
-  return (
-    <div onClick={handleMouseClick} className='root' style={{
+    return <div onClick={handleMouseClick} className='root' style={{
       position: 'relative',
       height: '100%',
       userSelect: 'none',
       width: '100%',
-      border: '1px solid'
     }}>
-      <button onClick={(e) => {
-        e.stopPropagation()
-        positions.pop()
-        
-      }} >desfazer</button>
-      <button onClick={(e) => {
-        e.stopPropagation()
-      }}>refazer</button>
-      <br />
-      {positions.map((position, index) => (
+      <div style={{
+        width:300,
+        margin:'auto',
+        justifyContent:'space-evenly',
+        padding:10,
+        display:'flex'
+      }}>
+
+        <button onClick={(e) => {
+          e.stopPropagation()
+          let dotsCopy = [...dots]
+          const deletedDot = dotsCopy.pop()
+          setDeletedDots([...deletedDots, deletedDot])
+          setDots(dotsCopy)
+
+        }} >undo</button>
+        <button onClick={(e) => {
+          e.stopPropagation()
+          if (deletedDots.length > 0 && dots.length > 0) {
+            const deletedDotCopy = [...deletedDots]
+            const lastDeletedDot = deletedDotCopy.pop()
+            setDeletedDots(deletedDotCopy)
+            setDots([...dots, lastDeletedDot])
+          }
+
+        }}>redo</button>
+      </div>
+
+      {dots?.map((dot, index) => (
         <div
 
-          key={`${position.x} - ${index}`} style={{
+          key={`${dot?.x} - ${index}`} style={{
             width: 10,
             borderRadius: '50%',
             height: 10,
-            backgroundColor: position.color,
+            backgroundColor: '#76ff06',
             position: 'absolute',
-            transform: `translate(${position.x}px, ${position.y - 50}px)`
+            transform: `translate(${dot?.x}px, ${dot?.y - 50}px)`
           }} />
 
 
       ))}
     </div>
-  )
+  }
+
+    , [dots, deletedDots])
+  return mainComponent
 }
 
 export default App
