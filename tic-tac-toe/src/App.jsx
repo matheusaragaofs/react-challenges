@@ -15,11 +15,17 @@ function App() {
 
   }
   const [currentPlayerTurn, setCurrentPlayerTurn] = useState(players.playerOne)
+  const [disabledBoard, setDisabledBoard] = useState(false)
   const [match, setMatch] = useState({
     vertical: false,
     horizontal: false,
-    diagonal_left: false,
-    diagonal_right: false
+    left_diagonal: false,
+    right_diagonal: false
+  })
+
+  const [winnerMatchConfig, setWinnerMatchConfig] = useState({
+    orientation: '',
+    position: ''
   })
 
   const [boardPlays, setBoardPlays] = useState([{ player: null, index: 1 },
@@ -38,20 +44,45 @@ function App() {
     if (orientation)
       setTimeout(() => {
         alert(`there is match ${orientation[0]}`)
-
-      }, 500);
+        location.reload()
+      }, 100);
 
   }, [match])
 
+  const parseIndex = ({ index, orientation }) => {
+    switch (index) {
+      case 1:
+        return orientation === 'vertical' ? 'first' : 'third'
 
+      case 2:
+        return 'second'
+
+      case 3:
+        return orientation === 'vertical' ? 'third' : 'first'
+
+      default:
+        'none'
+        break;
+    }
+
+  }
   const checkMatchedRows = (rows, orientation) => {
     const checkIfPlayersAreEqual = (player, row) => player.number == row[0].player.number
-    rows.forEach((row) => {
+    rows.forEach((row, index) => {
       const findMatch = row.every(({ player }) => player != null && checkIfPlayersAreEqual(player, row))
       if (findMatch) {
-        setMatch({ ...match, [orientation]: true })
+        let parsedOrientation = orientation
+
+        setMatch({ ...match, [parsedOrientation]: true })
+        setDisabledBoard(true)
+        setWinnerMatchConfig({
+          orientation,
+          position: parseIndex({ index: index + 1, orientation })
+        })
       }
-    })
+
+    }
+    )
   }
   const getDiagonals = (rows) => {
     let diagonals = [[], []]
@@ -85,14 +116,15 @@ function App() {
       })
     })
 
-    checkMatchedRows(verticalArray, 'horizontal')
-    checkMatchedRows([diagonals[0]], 'diagonal_left')
-    checkMatchedRows([diagonals[1]], 'diagonal_right')
+    checkMatchedRows(verticalArray, 'vertical')
+    checkMatchedRows([diagonals[0]], 'left_diagonal')
+    checkMatchedRows([diagonals[1]], 'right_diagonal')
 
   }
 
 
   const handlePlayerClick = (index) => {
+    if (disabledBoard) return
     if (currentPlayerTurn.number === 1) {
       let boardPlaysCopy = [...boardPlays]
       if (boardPlaysCopy[index].player) return
@@ -117,15 +149,29 @@ function App() {
     }
 
   }
-  const configs = {
-    vertical: 'rotate-90',
-    horizontal: "rotate-30",
-    diagonal: "rotate-45",
-    right_diagonal: "-rotate-45"
+
+  const yAxisConfig = {
+    first: "top-[15%]",
+    second: "top-[50%]",
+    third: "top-[80%]"
   }
+
+  const xAxisConfig = {
+    first: "-left-[30%]",
+    second: 'left-0',
+    third: "left-[30%]",
+  }
+
+  const configs = {
+    vertical: `rotate-90 top-[50%] ${xAxisConfig[`${winnerMatchConfig.position}`]}`,
+    left_diagonal: `rotate-45 top-[50%]`,
+    right_diagonal: "-rotate-45 top-[50%]",
+    horizontal: `rotate-30 ${yAxisConfig[`${winnerMatchConfig.position}`]}`,
+  }
+
   return (
     <div className='App'>
-      <div className='select-none relative' style={{
+      <div className='select-none relative cursor-pointer bg-gradient-to-r from-blue-400 to-green-500 rounded-2xl' style={{
         width: 500,
         height: 500,
         display: 'grid',
@@ -134,12 +180,12 @@ function App() {
       }}>
         {boardPlays.map((pos, index) => {
           return (
-            <div key={index} onClick={() => handlePlayerClick(index)} className="bg-green-300  hover:bg-green-200 transition flex items-center justify-center relative">
-              <div className='absolute top-0 left-0 pl-5 text-blue-900'>
+            <div key={index} onClick={() => handlePlayerClick(index)} className=" hover:bg-blue-200/20 rounded-2xl transition flex items-center justify-center relative">
+              <div className='absolute top-0 left-0 pl-5 text-white text-lg'>
                 {pos.index}
 
               </div>
-              <div className='text-3xl font-bold text-black/90'>
+              <div className='text-3xl font-bold text-cyan-900/90'>
                 {pos?.player?.shape}
               </div>
             </div>
@@ -147,7 +193,9 @@ function App() {
           )
         }
         )}
-        <div className='w-full h-1 absolute bg-red-500 top-1/2 rotate-90 translate-y-2'/>
+        {winnerMatchConfig.orientation && <div id='line-winner-match' className={`w-full h-1 absolute bg-white ${configs[`${winnerMatchConfig.orientation}`]}`} />
+        }
+
       </div>
     </div>
   )
