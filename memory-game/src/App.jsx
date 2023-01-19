@@ -31,18 +31,45 @@ function App() {
   const getRandomIndex = (boardIndexes) =>
     Math.floor(Math.random() * boardIndexes.length);
 
+  const bi = {
+    0: [0, 1, 2, 3],
+    1: [0, 1, 2, 3],
+    2: [0, 1, 2, 3],
+    3: [0, 1, 2, 3],
+  };
+  const pbi = Object.entries(bi);
+
+  const getColsRows = () => {
+    const index = getRandomIndex(pbi);
+    
+    if (!pbi[index]) {
+      return getColsRows();
+    }
+    const [col, rows] = pbi[index];
+
+    if (!rows.length) {
+      delete pbi[index];
+      return getColsRows();
+    }
+
+    const [randowRow] = rows.splice(getRandomIndex(rows), 1);
+
+    return {
+      col: Number(col),
+      row: randowRow,
+    };
+  };
+
   const parsedBoardIndexes = {
     col: boardIdexes,
     row: boardIdexes,
   };
+  console.log("pbi:", pbi);
   board.forEach((col, indexCol) => {
-    const colIndex = getRandomIndex(parsedBoardIndexes.col);
-    //fazer array de 4 dimensoes no parsedboardindexeds
     col.forEach((_, indexRow) => {
-      const rowIndex = getRandomIndex(parsedBoardIndexes.row);
-      board[colIndex][rowIndex] = getDiffEmojis(board);
-      console.log('colIndex:', colIndex)
+      const { row, col } = getColsRows();
 
+      board[row][col] = getDiffEmojis(board);
     });
   });
 
