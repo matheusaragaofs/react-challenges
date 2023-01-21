@@ -11,7 +11,7 @@ function App() {
     <div className=" rounded-lg w-full h-full">
       {!confirmDifficulty ? (
         <div className="h-full w-full">
-          <div className="font-bold text-lg mb-2">Mermory Game 🕵️</div>
+          <div className="font-bold text-lg mb-2">Memory Game 🕵️</div>
 
           <span className="text-sm">Choose the difficulty:</span>
           <div className="space-x-3">
