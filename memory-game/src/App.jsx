@@ -1,14 +1,32 @@
 import { useState } from "react";
 import "./App.css";
 import { Board } from "./components/Board";
+import ReactHowler from "react-howler";
 
 function App() {
   const [boardSize, setBoardSize] = useState(2);
   const [confirmDifficulty, setConfirmDifficulty] = useState(false);
   const [sneakQtt, setSneakQtt] = useState();
-
+  const [playMusic, setPlayMusic] = useState(true);
   return (
-    <div className=" rounded-lg w-full h-full text-white">
+    <div 
+    style={{
+      backgroundImage: "linear-gradient(to right,  #00eadc, #00c0e8, #0092ee, #005eda, #400ba0)",
+      padding:'2rem'
+      
+      
+      }}
+    className=" 
+   rounded-lg w-full h-full text-white">
+      <div>
+        <button
+          className="m-4 outline-none  rounded-lg px-4 py-3 bg-white/20 shadow-lg hover:scale-110 transition-all"
+          onClick={() => setPlayMusic(!playMusic)}
+        >
+          {playMusic ? "song is playing..." : "song paused"} 🎵🎶
+        </button>
+        <ReactHowler volume={0.2} loop src={["relax-music.mp3"]} playing={playMusic} />
+      </div>
       {!confirmDifficulty ? (
         <div className="h-full w-full">
           <div className="font-bold text-2xl mb-2">Memory Game 🕵️</div>
