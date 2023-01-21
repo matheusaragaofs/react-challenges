@@ -1,4 +1,3 @@
-import { getBoardIndexes } from "../boardIndexes";
 
 const getRandomIndex = (boardIndexes) =>
   Math.floor(Math.random() * boardIndexes.length);

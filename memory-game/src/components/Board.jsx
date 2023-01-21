@@ -5,7 +5,10 @@ import { getDiffEmojis } from "../helpers/emojis";
 
 export const Board = ({ boardSize }) => {
   const [selectedCards, setSelectedCards] = useState([]);
+  const [findedCards, setFindedCards] = useState([]);
   const [theBoard, settheBoard] = useState();
+  const [disableBoard, setDisableBoard] = useState(false);
+  const [win, setWin] = useState(false);
 
   useEffect(() => {
     let board = new Array(boardSize).fill("").map((e, index) => {
@@ -23,46 +26,68 @@ export const Board = ({ boardSize }) => {
 
     settheBoard(board);
   }, []);
-  const handleSelectedCards = (emoji) => {
-    if (!emoji && selectedCards[0] == selectedCards[1]) return
 
-    const [currentEmoji, index1CurrEmoji, index2CurrEmoji] = emoji.split("-");
-    const coordCurrentEmoji = `${index1CurrEmoji}-${index2CurrEmoji}`
-    
-    const repeatedEmoji =  selectedCards.find((card) => {
-      const [findEmoji, index1FindEmoji, index2FindEmoji] = card.split("-");
-      const coordFindEmoji = `${index1FindEmoji}-${index2FindEmoji}`
-      return ((findEmoji == currentEmoji) && (coordCurrentEmoji !== coordFindEmoji) )
-    });
-    console.log('repeatedEmoji:', repeatedEmoji)
-
-    if (selectedCards.length == 2) {
-      console.log("selectedCards 1:", selectedCards);
-      return setSelectedCards([]);
+  useEffect(() => {
+    if (findedCards.length == boardSize * boardSize) {
+      setWin(true);
     }
-    setSelectedCards([...selectedCards, emoji]);
-    if (repeatedEmoji) return (alert('achou!!'))  
-    console.log("selectedCards: 2", selectedCards);
+  }, [findedCards]);
+
+  const handleSelectedCards = (currentCard) => {
+    if (selectedCards[0] == currentCard) return;
+    if (selectedCards.length) {
+      const [uniqueEmojiCard] = selectedCards;
+      if (uniqueEmojiCard !== currentCard) {
+        const [emoji1] = uniqueEmojiCard.split("-");
+        const [emoji2] = currentCard.split("-");
+        if (emoji1 !== emoji2) {
+          setDisableBoard(true);
+          setSelectedCards([...selectedCards, currentCard]);
+          setTimeout(() => {
+            setSelectedCards([]);
+            setDisableBoard(false);
+          }, 1000);
+          return;
+        } else {
+          setFindedCards([...findedCards, uniqueEmojiCard, currentCard]);
+
+          return setSelectedCards([]);
+        }
+      }
+    }
+    setSelectedCards([...selectedCards, currentCard]);
   };
   const pbi = boardSizes[boardSize];
   return (
-    <div className="App">
+    <div >
+      {win && (
+        <div className="bg-white text-black rounded-lg p-2 font-bold -translate-y-4">
+          Congrats! You won! 🤩🥳🎉
+        </div>
+      )}
       {theBoard?.map((col, i1) => (
-        <div key={i1} className="flex ">
+        <div key={i1} className="flex justify-center border-1 ">
           {col.map((row, i2) => (
             <div
-              onClick={() => handleSelectedCards(`${row}-${i1}-${i2}`)}
+              onClick={() =>
+                disableBoard
+                  ? () => {}
+                  : handleSelectedCards(`${row}-${i1}-${i2}`)
+              }
               key={i2}
-              className="relative overflow-clip flex items-center select-none justify-center w-10 h-10  bg-white/20 m-1 hover:scale-110 transition-all duration-150  hover:bg-blue-300 cursor-pointer"
+              className="relative overflow-clip flex items-center select-none justify-center h-14 w-14   bg-white/20 m-1 hover:scale-110 transition-all duration-150  hover:bg-blue-300 cursor-pointer"
             >
-              {!selectedCards.includes(`${row}-${i1}-${i2}`) && (
-                <div className="bg-red-400 absolute h-full w-full" />
-              )}
+              {!selectedCards.includes(`${row}-${i1}-${i2}`) &&
+                !findedCards.includes(`${row}-${i1}-${i2}`) && (
+                  <div className="bg-cyan-500/10 absolute h-full w-full" />
+                )}
               {row}
             </div>
           ))}
         </div>
       ))}
+
+      {win ? <button className="mt-2" onClick={() => location.reload()}>Try again?</button> : <button className="translate-y-28 mb-10" onClick={() => location.reload()}>Back</button>}
     </div>
   );
 };
