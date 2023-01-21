@@ -61,28 +61,28 @@ export const Board = ({ boardSize, sneakQtt }) => {
 
   const handleSneak = () => {
     setSneak(true);
-    setDisableSneakClick(true)
+    setDisableSneakClick(true);
     setCurrentSneakQtt(currentSneakQtt - 1);
     setTimeout(() => {
       setSneak(false);
-      setDisableSneakClick(false)
+      setDisableSneakClick(false);
     }, 5000);
   };
   return (
     <div>
-      {!!currentSneakQtt && (
-        <div className="mt-2">
+      {(!!currentSneakQtt && !win) && (
+        <div className="mb-4">
           you got {currentSneakQtt} of this
           <button
+            className="ml-4 rounded-lg px-4 py-3 bg-white/20 shadow-lg hover:scale-110 transition-all"
             onClick={disableSneakClick ? () => {} : handleSneak}
-            className="border-1 border-cyan-600 m-4"
           >
             sneak 👀 for 5 seconds
           </button>
         </div>
       )}
       {win && (
-        <div className="bg-white text-black rounded-lg p-2 font-bold -translate-y-4">
+        <div className="bg-white/20 text-white rounded-lg p-2 mb-4 font-bold">
           Congrats! You won! 🤩🥳🎉
         </div>
       )}
@@ -96,12 +96,12 @@ export const Board = ({ boardSize, sneakQtt }) => {
                   : handleSelectedCards(`${row}-${i1}-${i2}`)
               }
               key={i2}
-              className="relative overflow-clip flex items-center select-none justify-center h-14 w-14   bg-white/20 m-1 hover:scale-110 transition-all duration-150  hover:bg-blue-300 cursor-pointer"
+              className="relative rounded-md overflow-clip flex items-center select-none justify-center h-14 w-14   bg-white/20 m-1 hover:scale-110 transition-all duration-150  hover:bg-blue-300 cursor-pointer"
             >
               {!sneak &&
                 !selectedCards.includes(`${row}-${i1}-${i2}`) &&
                 !findedCards.includes(`${row}-${i1}-${i2}`) && (
-                  <div className="bg-cyan-500 absolute h-full w-full" />
+                  <div className="bg-blue-100 rounded-md absolute h-full w-full" />
                 )}
               {row}
             </div>
@@ -110,12 +110,15 @@ export const Board = ({ boardSize, sneakQtt }) => {
       ))}
 
       {win ? (
-        <button className="mt-2" onClick={() => location.reload()}>
+        <button
+          className="mt-2 rounded-lg px-4 py-3 bg-white/40 shadow-lg hover:scale-110 transition-all"
+          onClick={() => location.reload()}
+        >
           Try again?
         </button>
       ) : (
         <button
-          className="translate-y-28 mb-10"
+          className="mt-16 mb-10 rounded-lg px-4 py-3 bg-white/40 shadow-lg hover:scale-110 transition-all"
           onClick={() => location.reload()}
         >
           Back

@@ -6,7 +6,6 @@ export const getDiffEmojis = (board) => {
 
   if (emojiOccurrency == 2) {
     newCurrEmoji = getEmoji();
-    console.log('board?.flat():', board?.flat())
     if (board?.flat().includes(newCurrEmoji)) getDiffEmojis(board);
 
     return newCurrEmoji;

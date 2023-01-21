@@ -8,14 +8,15 @@ function App() {
   const [sneakQtt, setSneakQtt] = useState();
 
   return (
-    <div className=" rounded-lg w-full h-full">
+    <div className=" rounded-lg w-full h-full text-white">
       {!confirmDifficulty ? (
         <div className="h-full w-full">
-          <div className="font-bold text-lg mb-2">Memory Game 🕵️</div>
+          <div className="font-bold text-2xl mb-2">Memory Game 🕵️</div>
 
           <span className="text-sm">Choose the difficulty:</span>
-          <div className="space-x-3">
+          <div className="space-x-3 space-y-3 mt-2  ">
             <button
+              className=" rounded-lg px-4 py-3 bg-white/20 shadow-lg hover:scale-110 transition-all"
               onClick={() => {
                 setBoardSize(4);
                 setConfirmDifficulty(true);
@@ -24,6 +25,7 @@ function App() {
               {"easy 😊 "}
             </button>
             <button
+              className="outline-none  rounded-lg px-4 py-3 bg-white/20 shadow-lg hover:scale-110 transition-all"
               onClick={() => {
                 setBoardSize(6);
                 setSneakQtt(1);
@@ -33,6 +35,7 @@ function App() {
               {"medium 😐 "}
             </button>
             <button
+              className=" rounded-lg px-4 py-3 bg-white/20 shadow-lg hover:scale-110 transition-all"
               onClick={() => {
                 setBoardSize(8);
                 setSneakQtt(2);
@@ -42,6 +45,7 @@ function App() {
               {"hard 😈 "}
             </button>
             <button
+              className=" rounded-lg px-4 py-3 bg-white/20 shadow-lg hover:scale-110 transition-all"
               onClick={() => {
                 setSneakQtt(4);
                 setBoardSize(10);
