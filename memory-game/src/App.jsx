@@ -5,6 +5,7 @@ import { Board } from "./components/Board";
 function App() {
   const [boardSize, setBoardSize] = useState(2);
   const [confirmDifficulty, setConfirmDifficulty] = useState(false);
+  const [sneakQtt, setSneakQtt] = useState();
 
   return (
     <div className=" rounded-lg w-full h-full">
@@ -25,6 +26,7 @@ function App() {
             <button
               onClick={() => {
                 setBoardSize(6);
+                setSneakQtt(1);
                 setConfirmDifficulty(true);
               }}
             >
@@ -33,6 +35,7 @@ function App() {
             <button
               onClick={() => {
                 setBoardSize(8);
+                setSneakQtt(2);
                 setConfirmDifficulty(true);
               }}
             >
@@ -40,6 +43,7 @@ function App() {
             </button>
             <button
               onClick={() => {
+                setSneakQtt(4);
                 setBoardSize(10);
                 setConfirmDifficulty(true);
               }}
@@ -49,7 +53,7 @@ function App() {
           </div>
         </div>
       ) : (
-        <Board boardSize={boardSize} />
+        <Board boardSize={boardSize} sneakQtt={sneakQtt} />
       )}
     </div>
   );

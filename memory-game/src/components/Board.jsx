@@ -3,27 +3,28 @@ import { boardSizes } from "../boardSizes";
 import { getColsRows } from "../helpers/cols-rows";
 import { getDiffEmojis } from "../helpers/emojis";
 
-export const Board = ({ boardSize }) => {
-  console.log('boardSize:', boardSize)
+export const Board = ({ boardSize, sneakQtt }) => {
   const [selectedCards, setSelectedCards] = useState([]);
   const [findedCards, setFindedCards] = useState([]);
   const [theBoard, settheBoard] = useState();
   const [disableBoard, setDisableBoard] = useState(false);
+  const [disableSneakClick, setDisableSneakClick] = useState(false);
+  const [sneak, setSneak] = useState(false);
+  const [currentSneakQtt, setCurrentSneakQtt] = useState(sneakQtt);
+
   const [win, setWin] = useState(false);
 
   useEffect(() => {
     let board = new Array(boardSize).fill("").map((e, index) => {
       return new Array(boardSize).fill(1);
     });
-        board?.forEach((col, indexCol) => {
-          col?.forEach((_, indexRow) => {
-            const { row, col } = getColsRows(pbi);
-            board[row][col] = getDiffEmojis(board);
-          });
-          
-        });
-      settheBoard(board);
-
+    board?.forEach((col, indexCol) => {
+      col?.forEach((_, indexRow) => {
+        const { row, col } = getColsRows(pbi);
+        board[row][col] = getDiffEmojis(board);
+      });
+    });
+    settheBoard(board);
   }, []);
 
   useEffect(() => {
@@ -57,8 +58,29 @@ export const Board = ({ boardSize }) => {
     setSelectedCards([...selectedCards, currentCard]);
   };
   const pbi = boardSizes[boardSize];
+
+  const handleSneak = () => {
+    setSneak(true);
+    setDisableSneakClick(true)
+    setCurrentSneakQtt(currentSneakQtt - 1);
+    setTimeout(() => {
+      setSneak(false);
+      setDisableSneakClick(false)
+    }, 5000);
+  };
   return (
-    <div >
+    <div>
+      {!!currentSneakQtt && (
+        <div className="mt-2">
+          you got {currentSneakQtt} of this
+          <button
+            onClick={disableSneakClick ? () => {} : handleSneak}
+            className="border-1 border-cyan-600 m-4"
+          >
+            sneak 👀 for 5 seconds
+          </button>
+        </div>
+      )}
       {win && (
         <div className="bg-white text-black rounded-lg p-2 font-bold -translate-y-4">
           Congrats! You won! 🤩🥳🎉
@@ -76,9 +98,10 @@ export const Board = ({ boardSize }) => {
               key={i2}
               className="relative overflow-clip flex items-center select-none justify-center h-14 w-14   bg-white/20 m-1 hover:scale-110 transition-all duration-150  hover:bg-blue-300 cursor-pointer"
             >
-              {!selectedCards.includes(`${row}-${i1}-${i2}`) &&
+              {!sneak &&
+                !selectedCards.includes(`${row}-${i1}-${i2}`) &&
                 !findedCards.includes(`${row}-${i1}-${i2}`) && (
-                  <div className="bg-cyan-500/10 absolute h-full w-full" />
+                  <div className="bg-cyan-500 absolute h-full w-full" />
                 )}
               {row}
             </div>
@@ -86,7 +109,18 @@ export const Board = ({ boardSize }) => {
         </div>
       ))}
 
-      {win ? <button className="mt-2" onClick={() => location.reload()}>Try again?</button> : <button className="translate-y-28 mb-10" onClick={() => location.reload()}>Back</button>}
+      {win ? (
+        <button className="mt-2" onClick={() => location.reload()}>
+          Try again?
+        </button>
+      ) : (
+        <button
+          className="translate-y-28 mb-10"
+          onClick={() => location.reload()}
+        >
+          Back
+        </button>
+      )}
     </div>
   );
 };
