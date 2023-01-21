@@ -4,6 +4,7 @@ import { getColsRows } from "../helpers/cols-rows";
 import { getDiffEmojis } from "../helpers/emojis";
 
 export const Board = ({ boardSize }) => {
+  console.log('boardSize:', boardSize)
   const [selectedCards, setSelectedCards] = useState([]);
   const [findedCards, setFindedCards] = useState([]);
   const [theBoard, settheBoard] = useState();
@@ -14,17 +15,15 @@ export const Board = ({ boardSize }) => {
     let board = new Array(boardSize).fill("").map((e, index) => {
       return new Array(boardSize).fill(1);
     });
-
-    if (board) {
-      board?.forEach((col, indexCol) => {
-        col?.forEach((_, indexRow) => {
-          const { row, col } = getColsRows(pbi);
-          board[row][col] = getDiffEmojis({ board, boardSize });
+        board?.forEach((col, indexCol) => {
+          col?.forEach((_, indexRow) => {
+            const { row, col } = getColsRows(pbi);
+            board[row][col] = getDiffEmojis(board);
+          });
+          
         });
-      });
-    }
+      settheBoard(board);
 
-    settheBoard(board);
   }, []);
 
   useEffect(() => {
@@ -79,7 +78,7 @@ export const Board = ({ boardSize }) => {
             >
               {!selectedCards.includes(`${row}-${i1}-${i2}`) &&
                 !findedCards.includes(`${row}-${i1}-${i2}`) && (
-                  <div className="bg-cyan-500 absolute h-full w-full" />
+                  <div className="bg-cyan-500/10 absolute h-full w-full" />
                 )}
               {row}
             </div>

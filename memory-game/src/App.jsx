@@ -32,11 +32,19 @@ function App() {
             </button>
             <button
               onClick={() => {
-                setBoardSize(9);
+                setBoardSize(8);
                 setConfirmDifficulty(true);
               }}
             >
               {"hard 😈 "}
+            </button>
+            <button
+              onClick={() => {
+                setBoardSize(10);
+                setConfirmDifficulty(true);
+              }}
+            >
+              {"impossible 🔥 "}
             </button>
           </div>
         </div>
