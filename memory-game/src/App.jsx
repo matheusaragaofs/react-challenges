@@ -10,19 +10,28 @@ function App() {
     return (
       <div>
         Qual é o tamanho do board ?
-        <input
-          onChange={(e) => {
-            setBoardSize(Number(e.target.value));
-          }}
-          min={2}
-          max={7}
-          defaultValue={2}
-          type='range'
-        />
-        <div>
-          {boardSize} x {boardSize}
+        <div className="space-x-3 py-4">
+          <button
+            onClick={() => {
+              setBoardSize(4);
+              setConfirmSize(true);
+            }}
+          >
+            {"fácil :) "}
+          </button>
+          <button
+            onClick={() => {
+              setBoardSize(6);
+              setConfirmSize(true);
+            }}
+          >
+            {"médio :| "}
+          </button>
+          <button    onClick={() => {
+              setBoardSize(9);
+              setConfirmSize(true);
+            }}>{"difícil >:) "}</button>
         </div>
-        <button onClick={() =>  setConfirmSize(true)}>Confirmar</button>
       </div>
     );
   return <Board boardSize={boardSize} />;
