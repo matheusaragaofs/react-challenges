@@ -79,7 +79,7 @@ export const Board = ({ boardSize }) => {
             >
               {!selectedCards.includes(`${row}-${i1}-${i2}`) &&
                 !findedCards.includes(`${row}-${i1}-${i2}`) && (
-                  <div className="bg-cyan-500/10 absolute h-full w-full" />
+                  <div className="bg-cyan-500 absolute h-full w-full" />
                 )}
               {row}
             </div>
