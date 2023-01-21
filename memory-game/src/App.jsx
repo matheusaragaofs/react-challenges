@@ -1,9 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import { Board } from "./components/Board";
 import ReactHowler from "react-howler";
 
 function App() {
+
+  document.addEventListener("visibilitychange", (event) => {
+    if (document.visibilityState == "hidden") {
+      setPlayMusic(false)
+    } 
+  });
+  
   const [boardSize, setBoardSize] = useState(2);
   const [confirmDifficulty, setConfirmDifficulty] = useState(false);
   const [sneakQtt, setSneakQtt] = useState();
